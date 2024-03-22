@@ -151,3 +151,7 @@ const Security= () => {
 };
 
 export default Security;
+
+
+
+// Path: client/src/App.jsx 
