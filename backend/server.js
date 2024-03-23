@@ -1,11 +1,9 @@
 import express from 'express'
 import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
 import cors from 'cors'
 import dotenv from 'dotenv';
 
 
-import path from 'path';
 dotenv.config();
 
 //routes imports 
@@ -16,16 +14,19 @@ const app = express();
 const CONNECTION_URL = process.env.CONNECTION_URL
  const PORT = process.env.PORT;
 
-app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(express.json());
 app.use(cors({
   origin: "http://localhost:5173",
   methods: ['GET', 'POST',"PUT"],
   credentials: true
 }));
-app.use(express.static(path.join('./', 'public')));
 
 
+app.get('/',(req,res) => {
+    console.log(req)
+    return res.status(234).send('well')
+});
 // db connection
 async function main() {
   try {
