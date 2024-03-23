@@ -25,7 +25,7 @@ app.use(cors({
 
 app.get('/',(req,res) => {
     console.log(req)
-    return res.status(234).send('well')
+    return res.status(200).send('well')
 });
 // db connection
 async function main() {
