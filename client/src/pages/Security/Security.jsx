@@ -129,11 +129,13 @@ const Security= () => {
   };
 
   return (
-    <div>
-      <h1>AI Suspicious Activity Detector Camera</h1>
-      <p>Recognize Movement</p>
+    <div className='w-1/2 h-full bg-yellow-50 flex flex-col items-center ml-20  mt-10 mb-10 border-2 rounded-lg' >
+      <h1 className='text-[20px] font-bold text-red-900 mt-20 '>Suspicious Activity Detector Camera</h1>
+      <p className='text-[18px] font-semibold'>Recognize Movement</p>
       <p ref={outputRef} id="output"></p>
-      {!isStarted && <button onClick={handleStartClick}>Start</button>}
+      {!isStarted && <button onClick={handleStartClick} 
+      className='bg-red-600 hover:bg-red-800 w-40 h-10 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mt-5'
+      >Start</button>}
       {isStarted && (
         <div>
           <canvas ref={canvasRef}></canvas>

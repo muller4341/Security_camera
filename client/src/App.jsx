@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import Security from './pages/Security'
+import Home from './pages/Home'
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <Security />
+    <div >
+      < Home/>
+      </div>
       
     </>
   )
