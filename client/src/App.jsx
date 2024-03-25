@@ -1,12 +1,19 @@
-import { useState } from 'react'
+
 import Home from './pages/Home'
+import MoreImage from './pages/ScreenShut/moreImage'
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
     <div >
-      < Home/>
+      <Router>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/more' element={<MoreImage />} />
+        </Routes>
+      </Router>
+  
       </div>
       
     </>

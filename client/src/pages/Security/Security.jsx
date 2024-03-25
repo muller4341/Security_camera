@@ -15,14 +15,14 @@ const Security= () => {
     let model, webcam, ctx, labelContainer, maxPredictions;
 
     const init = async () => {
-      const URL = "https://teachablemachine.withgoogle.com/models/jLeJTw1rQ/";
+      const URL = "https://teachablemachine.withgoogle.com/models/zlnlBPeEO/";
       const modelURL = URL + "model.json";
       const metadataURL = URL + "metadata.json";
 
       model = await tmPose.load(modelURL, metadataURL);
       maxPredictions = model.getTotalClasses();
 
-      const size = 300;
+      const size = 400;
       const flip = true;
       webcam = new tmPose.Webcam(size, size, flip);
       webcamRef.current = webcam;
@@ -116,7 +116,7 @@ const Security= () => {
     formData.append("screenshot", screenshotDataUrl);
 
     axios
-      .post("/api/upload-data", formData)
+      .post("http://localhost:5000/camera/upload", formData)
       .then((response) => {
         console.log("Video and screenshot uploaded successfully.");
       })
@@ -127,6 +127,14 @@ const Security= () => {
   const handleStartClick = () => {
     setIsStarted(true);
   };
+  
+
+const loop = async (timestamp) => {
+  webcam.update(); // update the webcam frame
+  await predict();
+  window.requestAnimationFrame(loop);
+};
+
 
   return (
     <div className='w-1/2 h-full bg-yellow-50 flex flex-col items-center ml-20  mt-10 mb-10 border-2 rounded-lg' >
@@ -153,7 +161,3 @@ const Security= () => {
 };
 
 export default Security;
-
-
-
-// Path: client/src/App.jsx 
