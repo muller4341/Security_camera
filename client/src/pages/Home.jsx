@@ -1,5 +1,5 @@
 import Security from "./Security/Security";
-import ScreenShut from "./ScreenShut/ScreenShut";
+import ScreenShoot from "./ScreenShut/ScreenShut";
 
 
 const Home = () => {
@@ -7,7 +7,8 @@ const Home = () => {
         <div className="flex flex-row w-screen h-screen bg-red-50">
             
             <Security />
-            <ScreenShut />
+            <ScreenShoot />
+            
         </div>
     );
 }

@@ -1,34 +1,33 @@
+import express from 'express';
+import multer from 'multer';
+import { GridFsStorage } from 'multer-gridfs-storage';
+import crypto from 'crypto';
+import path from 'path';
+import screenshotController from '../controllers/camera.js';
 
-// models/Image.js
-import mongoose from 'mongoose';
-import Grid from 'gridfs-stream';
-
-const conn = mongoose.connection;
-Grid.mongo = mongoose.mongo;
-let gfs;
-
-conn.once('open', () => {
-  gfs = Grid(conn.db);
+const router = express.Router();
+const storage = new GridFsStorage({
+  url: 'mongodb+srv://muller:1234@cluster0.ve461b6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      crypto.randomBytes(16, (err, buf) => {
+        if (err) {
+          return reject(err);
+        }
+        const filename = buf.toString('hex') + path.extname(file.originalname);
+        const fileInfo = {
+          filename: filename,
+          bucketName: 'uploads'
+          
+        };
+        resolve(fileInfo);
+      });
+    });
+  }
 });
 
-const imageSchema = new mongoose.Schema({
-  filename: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
-});
+const upload = multer({ storage });
 
-imageSchema.statics.upload = function (file, cb) {
-  const writestream = gfs.createWriteStream({
-    filename: file.originalname,
-    mode: 'w',
-    content_type: file.mimetype,
-  });
-  writestream.on('close', (uploadedFile) => {
-    this.create({ filename: uploadedFile.filename }, cb);
-  });
-  writestream.write(file.buffer);
-  writestream.end();
-};
+router.post('/upload', upload.single('screenshot'), screenshotController.uploadScreenshot);
 
-const Image = mongoose.model('Image', imageSchema);
-
-export default Image;
+export default router;

@@ -1,11 +1,8 @@
-
-import Image from '../models/camera.js';
-
-export const uploadImage = (req, res) => {
-  Image.upload(req.file, (err, image) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.status(201).json(image);
-  });
+const uploadScreenshot = (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded.' });
+  }
+  res.status(200).json({ message: 'Screenshot uploaded successfully.' });
 };
+
+export default { uploadScreenshot };
