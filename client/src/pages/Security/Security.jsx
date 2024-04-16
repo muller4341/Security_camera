@@ -100,30 +100,38 @@ const Security = () => {
     };
   }, [isStarted]);
 
-  const sendToDatabase = async () => {
-    const canvasElement = canvasRef.current;
-    const videoStream = webcamRef.current.stream;
+  let lastScreenshotTime = 0;
 
-    const screenshotDataUrl = canvasElement.toDataURL();
-  
-    const formData = new FormData();
-    const blob = await (await fetch(screenshotDataUrl)).blob();
-     formData.append("screenshot", blob);
+const sendToDatabase = async () => {
+  const now = Date.now();
+  if (now - lastScreenshotTime < 20000) {
+    // Less than 20 seconds have passed since the last screenshot
+    return;
+  }
+  lastScreenshotTime = now;
 
-    axios
-      .post("http://localhost:3000/camera/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log("Screenshot uploaded successfully.");
-      })
-      .catch((error) => {
-        console.error("Error uploading screenshot:", error);
-      });
-  };
+  const canvasElement = canvasRef.current;
+  const screenshotDataUrl = canvasElement.toDataURL();
 
+  const formData = new FormData();
+  const blob = await (await fetch(screenshotDataUrl)).blob();
+  formData.append("screenshot", blob);
+
+  axios
+    .post("http://localhost:3000/camera/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((response) => {
+      console.log("Screenshot uploaded successfully.");
+      // Assuming the response contains the URL of the uploaded image
+      setScreenshot(response.data.url);
+    })
+    .catch((error) => {
+      console.error("Error uploading screenshot:", error);
+    });
+};
   const handleStartClick = () => {
     setIsStarted(true);
   };
@@ -152,4 +160,4 @@ const Security = () => {
   );
 };
 
-export default Security;  
+export default Security;

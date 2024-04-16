@@ -1,31 +1,38 @@
 import express from 'express';
-import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
-import screenshotController from '../controllers/camera.js';
-import { MongoClient } from 'mongodb';
+import multer from 'multer'; // for handling multipart/form-data, which is used for file upload
+import fs from 'fs'; // for file system operations
+import path from 'path'; // for handling file paths
+import { ImageModel } from '../models/imageModel.js'; // assuming you have an ImageModel for mongoose
 
 const router = express.Router();
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage });
-MongoClient.connect('mongodb+srv://muller:1234@cluster0.ve461b6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', (err, client) => {
-    if (err) return console.log(err);
-  let db = client.db('Security');
-  router.post('/upload', upload.single('screenshot'), (req, res) => {
-    let img = req.file.buffer;
-    let encode_image = img.toString('base64');
-    let finalImg = {
-        contentType: req.file.mimetype,
-        image:  new Buffer.from(encode_image, 'base64')
-    };
-    db.collection('images').insertOne(finalImg, (err, result) => {
-      console.log(result)
-  
-      if (err) return console.log(err)
-    });
-  });
-    }
-);6
 
+// Set up multer for storing uploaded files to disk
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname) +'.png'); // Append extension
+  },
+});
+
+const upload = multer({ storage });
+
+router.post('/upload', upload.single('screenshot'), async (req, res) => {
+  try {
+    const filePath = '/uploads/' + req.file.filename;
+    const newImage = new ImageModel({
+      url: filePath,
+      // add any other fields you need
+    });
+    const savedImage = await newImage.save();
+    console.log(savedImage)
+
+    res.json({ url: filePath });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error uploading image' });
+  }
+});
 
 export default router;
