@@ -15,14 +15,20 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname) +'.png'); // Append extension
   },
 });
-
 const upload = multer({ storage });
-
 router.post('/upload', upload.single('screenshot'), async (req, res) => {
+    let lastProduct = await ImageModel.findOne({}).sort('-id');
+        let id;
+        if (lastProduct) {
+            id = lastProduct.id + 1;
+        } else {
+            id = 1;
+        }
   try {
-    const filePath = '/uploads/' + req.file.filename;
+    const filePath = 'http://localhost:3000/uploads/' + req.file.filename;
     const newImage = new ImageModel({
       url: filePath,
+      id: id,
       // add any other fields you need
     });
     const savedImage = await newImage.save();

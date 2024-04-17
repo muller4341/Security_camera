@@ -3,7 +3,12 @@ import mongoose from 'mongoose';
 import screenshotRouter from './routes/camera.js';
 import cors from 'cors'; // Import the cors middleware
 import bodyParser from 'body-parser'; 
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
+const __filename = fileURLToPath(new URL(import.meta.url));
+const __dirname = dirname(__filename);
 
 
 const app = express();
@@ -13,8 +18,7 @@ app.use(express.json());
 app.use(cors()); // Enable CORS for all routes
 app.use(bodyParser.json({ limit: '200mb' })); // Increase payload size limit
 app.use(bodyParser.urlencoded({ limit: '200mb', extended: true })); // Increase payload size limit
-
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Move this line to your main server file
 
 mongoose.connect('mongodb+srv://muller:1234@cluster0.ve461b6.mongodb.net/Security?retryWrites=true&w=majority&appName=Cluster0')
   .then(() => {
