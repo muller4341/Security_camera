@@ -41,4 +41,12 @@ router.post('/upload', upload.single('screenshot'), async (req, res) => {
   }
 });
 
+//creating API for getting all products
+router.get('/allImages', async (req, res) => {
+  let images= await ImageModel.find({});
+  console.log('all images are fetched');
+  res.json( images);
+}
+);
+
 export default router;
