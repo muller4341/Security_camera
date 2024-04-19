@@ -2,6 +2,11 @@ import  { useEffect, useRef, useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import * as tmPose from '@teachablemachine/pose';
 import axios from 'axios';
+import audio1 from '../../assets/audio1.mp3';
+import audio2 from '../../assets/audio2.mp3';
+import audio3 from '../../assets/audio3.mp3';
+import audio4 from '../../assets/audio4.mp3';
+import audio5 from '../../assets/audio5.mp3';
 
 const Security = () => {
   const canvasRef = useRef(null);
@@ -10,6 +15,13 @@ const Security = () => {
   const webcamRef = useRef(null);
   const [isStarted, setIsStarted] = useState(false);
   const [screenshot, setScreenshot] = useState(null);
+
+  // Create a new Audio object
+  const audio = new Audio();
+
+  // Map prediction indices to audio files
+  const audioFiles = [audio1, audio2, audio3, audio4, audio5];
+
 
   useEffect(() => {
     let model, webcam, ctx, labelContainer, maxPredictions;
@@ -43,10 +55,28 @@ const Security = () => {
             prediction[3].probability.toFixed(2) >= 0.98 ||
             prediction[4].probability.toFixed(2) >= 0.98
           ) {
-            outputRef.current.innerHTML = "Suspicious activity";
+            outputRef.current.innerHTML = "Suspicious activity =  " +prediction[i].className;
             sendToDatabase();
+              
+              // Stop any currently playing audio
+              if (!audio.paused) {
+                audio.pause();
+                audio.currentTime = 0;
+              }
+              // Update the src of the Audio object and play the new audio
+              audio.src = audioFiles[i];
+              try{
+              audio.play()
+              }
+              catch(error){console.error("Error playing audio:", error)
+              };
           } else {
             outputRef.current.innerHTML = "Normal activity";
+            // Stop any currently playing audio
+            if (!audio.paused) {
+              audio.pause();
+              audio.currentTime = 0;
+            }
           }
         }
 

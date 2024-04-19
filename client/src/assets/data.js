@@ -4,6 +4,7 @@ import photo2 from './photo2.jpg';
 import photo3 from './photo3.jpg';
 import photo4 from './photo4.jpg';
 
+
 const data = [
     {
         id: 1,
