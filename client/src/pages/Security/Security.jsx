@@ -27,7 +27,7 @@ const Security = () => {
     let model, webcam, ctx, labelContainer, maxPredictions;
 
     const init = async () => {
-      const URL = "https://teachablemachine.withgoogle.com/models/zlnlBPeEO/";
+      const URL = "https://teachablemachine.withgoogle.com/models/MWbfH2Ycc/";
       const modelURL = URL + "model.json";
       const metadataURL = URL + "metadata.json";
 
@@ -53,7 +53,10 @@ const Security = () => {
             prediction[1].probability.toFixed(2) >= 0.98 ||
             prediction[2].probability.toFixed(2) >= 0.98 ||
             prediction[3].probability.toFixed(2) >= 0.98 ||
-            prediction[4].probability.toFixed(2) >= 0.98
+            prediction[4].probability.toFixed(2) >= 0.98 ||
+            prediction[5].probability.toFixed(2) >= 0.98 ||
+            prediction[6].probability.toFixed(2) >= 0.98 ||
+            prediction[7].probability.toFixed(2) >= 0.98
           ) {
             outputRef.current.innerHTML = "Suspicious activity =  " +prediction[i].className;
             sendToDatabase();
