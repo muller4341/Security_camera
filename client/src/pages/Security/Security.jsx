@@ -170,8 +170,8 @@ const sendToDatabase = async () => {
   };
 
   return (
-    <div className='w-1/2 h-full bg-yellow-50 flex flex-col items-center ml-20  mt-10 mb-10 border-2 rounded-lg' >
-      <h1 className='text-[20px] font-bold text-red-900 mt-20 '>Intelligent Video Monitoring System for Secure Exam</h1>
+    <div className='w-1/2 h-full bg-yellow-50 flex flex-col items-center ml-20  mt-4 mb-10 border-2 rounded-lg' >
+      
       <p className='text-[18px] font-semibold'>Recognize Movement</p>
       <p ref={outputRef} id="output"></p>
       {!isStarted && <button onClick={handleStartClick} 
