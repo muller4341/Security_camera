@@ -1,0 +1,20 @@
+.notification-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.alert-icon {
+    font-size: 24px;
+}
+
+.badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    padding: 5px 10px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+}
