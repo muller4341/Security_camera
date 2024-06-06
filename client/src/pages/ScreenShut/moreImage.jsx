@@ -16,10 +16,10 @@ const moreImage = () => {
     }, []);
 
     return (
-        <div className='w-full h-full bg-yellow-50 flex flex-col  items-center  ml-4 mr-10  mt-10 mb-10 border-2 rounded-lg' >
+        <div className='w-full h-full bg-yellow-50 flex flex-col  items-center  ml-4 mr-10  mt-10 mb-10 border-2 rounded-lg'  >
             <h1 className="text-[32px] font-bold mt-10 text-red-900"> Suspected Activities  </h1>
             <div className='flex justify-end  w-5/6 '>
-            <button className='bg-red-500 text-white font-bold py-2 px-10
+            <button className='bg-red-500 text-white font-bold py-2 px-10 target=”_blank”
                 hover:bg-red-800 rounded-lg mt-2 flex  justify-center'
                 onClick={() => {
                     window.location.href = '/';
@@ -34,7 +34,7 @@ const moreImage = () => {
                 
                 
                     {data.slice().reverse().map((item,i) => {
-                        return<Item key={i} id= {item.id} image={item.url} />
+                        return<Item key={i} id= {item.id} image={item.url} cameraName={item.cameraName} />
                     })} 
                 </div>
                 

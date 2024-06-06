@@ -1,14 +1,16 @@
 
-const item = (props) => {
+const item = ({ id, image, cameraName }) => {
     return (
-        <div className="flex w-full 
-        h-60 justify-center items-center  
+        <div className="flex w-full flex-col bg-red-50 
+        h-[300px] justify-center items-center  
         transition-transform transform hover:scale-110 bg-gray-200 border-2 rounded-lg"  >
-            <img src={props.image} alt="item" 
-            className="h-full w-full"/>
+            <p className="text-red-400 text-[18px] font-semibold">{cameraName}</p>
+            <img src={image} alt={`Screenshot ${id}`}  className="h-[280px] w-[280px]"/>
+            
         </div>
     );
 };
 
 export default item;
+
 

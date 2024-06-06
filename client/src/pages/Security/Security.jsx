@@ -3,10 +3,6 @@ import * as tf from '@tensorflow/tfjs';
 import * as tmPose from '@teachablemachine/pose';
 import axios from 'axios';
 import audio1 from '../../assets/audio1.mp3';
-import audio2 from '../../assets/audio2.mp3';
-import audio3 from '../../assets/audio3.mp3';
-import audio4 from '../../assets/audio4.mp3';
-import audio5 from '../../assets/audio5.mp3';
 
 const Security = () => {
   const canvasRef = useRef(null);
@@ -15,19 +11,33 @@ const Security = () => {
   const webcamRef = useRef(null);
   const [isStarted, setIsStarted] = useState(false);
   const [screenshot, setScreenshot] = useState(null);
+  const [cameraName, setCameraName] = useState(''); // New state variable for camera name
 
   // Create a new Audio object
   const audio = new Audio();
 
   // Map prediction indices to audio files
-  const audioFiles = [audio1, audio2, audio3, audio4, audio5];
+  const audioFiles = [audio1];
 
+  const handleCameraNameChange = (event) => {
+    setCameraName(event.target.value);
+  };
+  useEffect(() => {
+    // Get the name of the current video input device
+    navigator.mediaDevices.enumerateDevices().then(devices => {
+      const videoInputDevice = devices.find(device => device.kind === 'videoinput');
+      if (videoInputDevice) {
+        setCameraName(videoInputDevice.label);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     let model, webcam, ctx, labelContainer, maxPredictions;
 
     const init = async () => {
-      const URL = "https://teachablemachine.withgoogle.com/models/MWbfH2Ycc/";
+    const URL = "https://teachablemachine.withgoogle.com/models/UrIMXKhyV/";
+      
       const modelURL = URL + "model.json";
       const metadataURL = URL + "metadata.json";
 
@@ -42,37 +52,34 @@ const Security = () => {
       const predict = async () => {
         const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
         const prediction = await model.predict(posenetOutput);
-
+      
         for (let i = 0; i < maxPredictions; i++) {
           const classPrediction =
             prediction[i].className + ": " + prediction[i].probability.toFixed(2);
           labelContainer.childNodes[i].innerHTML = classPrediction;
-
+      
           if (
             prediction[0].probability.toFixed(2) >= 0.98 ||
             prediction[1].probability.toFixed(2) >= 0.98 ||
             prediction[2].probability.toFixed(2) >= 0.98 ||
-            prediction[3].probability.toFixed(2) >= 0.98 ||
-            prediction[4].probability.toFixed(2) >= 0.98 ||
-            prediction[5].probability.toFixed(2) >= 0.98 ||
-            prediction[6].probability.toFixed(2) >= 0.98 ||
-            prediction[7].probability.toFixed(2) >= 0.98
+            prediction[3].probability.toFixed(2) >= 0.98 
+          
           ) {
             outputRef.current.innerHTML = "Suspicious activity =  " +prediction[i].className;
             sendToDatabase();
               
-              // Stop any currently playing audio
-              if (!audio.paused) {
-                audio.pause();
-                audio.currentTime = 0;
-              }
-              // Update the src of the Audio object and play the new audio
-              audio.src = audioFiles[i];
-              try{
+            // Stop any currently playing audio
+            if (!audio.paused) {
+              audio.pause();
+              audio.currentTime = 0;
+            }
+            // Update the src of the Audio object and play the new audio
+            audio.src = audio1;
+            try{
               audio.play()
-              }
-              catch(error){console.error("Error playing audio:", error)
-              };
+            }
+            catch(error){console.error("Error playing audio:", error)
+            };
           } else {
             outputRef.current.innerHTML = "Normal activity";
             // Stop any currently playing audio
@@ -82,7 +89,7 @@ const Security = () => {
             }
           }
         }
-
+      
         drawPose(pose);
       };
 
@@ -108,6 +115,7 @@ const Security = () => {
       const startCamera = async () => {
         await webcam.setup();
         await webcam.play();
+       
         const canvasElement = canvasRef.current;
         if (canvasElement) {
           canvasElement.width = size;
@@ -149,6 +157,8 @@ const sendToDatabase = async () => {
   const formData = new FormData();
   const blob = await (await fetch(screenshotDataUrl)).blob();
   formData.append("screenshot", blob);
+  formData.append("cameraName", cameraName);
+  
 
   axios
     .post("http://localhost:3000/camera/upload", formData, {
@@ -173,6 +183,12 @@ const sendToDatabase = async () => {
     <div className='w-1/2 h-full bg-yellow-50 flex flex-col items-center ml-20  mt-4 mb-10 border-2 rounded-lg' >
       
       <p className='text-[18px] font-semibold'>Recognize Movement</p>
+      <span className='flex flex-row space-x-2'>
+      <p className='text-[18px] font-semibold  '>Camera Name</p> 
+     <p className=' text-[18px] text-red-600 font-semibold '> {cameraName}</p> 
+      </span>
+      
+      
       <p ref={outputRef} id="output"></p>
       {!isStarted && <button onClick={handleStartClick} 
       className='bg-red-600 hover:bg-red-800 w-40 h-10 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mt-5'
@@ -183,12 +199,7 @@ const sendToDatabase = async () => {
           <div ref={labelContainerRef}></div>
         </div>
       )}
-      {isStarted && screenshot && (
-        <div>
-          <h2>Screenshot</h2>
-          <img src={screenshot} alt="Screenshot" />
-        </div>
-      )}
+      
     </div>
   );
 };

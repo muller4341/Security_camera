@@ -17,6 +17,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 router.post('/upload', upload.single('screenshot'), async (req, res) => {
+  console.log("cameraName", req.body.cameraName);
     let lastProduct = await ImageModel.findOne({}).sort('-id');
         let id;
         if (lastProduct) {
@@ -29,6 +30,7 @@ router.post('/upload', upload.single('screenshot'), async (req, res) => {
     const newImage = new ImageModel({
       url: filePath,
       id: id,
+      cameraName: req.body.cameraName,
       // add any other fields you need
     });
     const savedImage = await newImage.save();

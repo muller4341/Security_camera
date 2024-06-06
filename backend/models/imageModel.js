@@ -12,6 +12,10 @@ const imageSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  cameraName: { 
+    type: String,
+    required: true,
+  }
 },
 {
   timestamps: true
