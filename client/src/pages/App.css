@@ -11,3 +11,32 @@
     animation: moveText 5s linear infinite;
   }
   
+
+  @keyframes zoomInOut {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.5);
+    }
+  }
+  
+  .animate-zoom-in-out {
+    animation: zoomInOut 5s ease-in-out infinite;
+  }
+  
+
+ /* item.css */
+
+/* Define hover effect */
+.item {
+  transition: transform 0.3s ease; /* Smooth transition */
+  position: relative; /* Ensure z-index works */
+}
+
+.item:hover {
+  transform: scale(2.1); /* Increase size by 10% */
+  z-index: 1; /* Bring hovered image to the top */
+}
+
+

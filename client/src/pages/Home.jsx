@@ -6,9 +6,9 @@ import './App.css';
 
 const Home = () => {
     return (
-        <div className="flex flex-col w-screen h-screen bg-red-50 justify-start">
+      <div className="flex flex-col w-screen h-[80vh] bg-red-50 justify-start ">
         <div className="flex flex-row mt-2 justify-center mx-60 items-center space-x-4">
-          <img src={photo1} alt="photo1" className="w-[80px] h-[50px]" />
+          <img src={photo1} alt="photo1" className="w-[80px] h-[25px]" />
           <div className="moving-text-container">
             <h1 className='text-[32px] font-bold text-red-900'>
               Intelligent Video Monitoring System for Secure Exam
