@@ -1,0 +1,13 @@
+@keyframes moveText {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  .moving-text-container {
+    animation: moveText 5s linear infinite;
+  }
+  

@@ -3,6 +3,8 @@ import * as tf from '@tensorflow/tfjs';
 import * as tmPose from '@teachablemachine/pose';
 import axios from 'axios';
 import audio1 from '../../assets/audio1.mp3';
+import CCTVCamera from '../../assets/CCTVCamera.gif';
+import { FaCamera } from "react-icons/fa";
 
 const Security = () => {
   const canvasRef = useRef(null);
@@ -44,7 +46,7 @@ const Security = () => {
       model = await tmPose.load(modelURL, metadataURL);
       maxPredictions = model.getTotalClasses();
 
-      const size = 400;
+      const size = 550;
       const flip = true;
       webcam = new tmPose.Webcam(size, size, flip);
       webcamRef.current = webcam;
@@ -59,7 +61,6 @@ const Security = () => {
           labelContainer.childNodes[i].innerHTML = classPrediction;
       
           if (
-            prediction[0].probability.toFixed(2) >= 0.98 ||
             prediction[1].probability.toFixed(2) >= 0.98 ||
             prediction[2].probability.toFixed(2) >= 0.98 ||
             prediction[3].probability.toFixed(2) >= 0.98 
@@ -180,27 +181,35 @@ const sendToDatabase = async () => {
   };
 
   return (
-    <div className='w-1/2 h-full bg-yellow-50 flex flex-col items-center ml-20  mt-4 mb-10 border-2 rounded-lg' >
-      
-      <p className='text-[18px] font-semibold'>Recognize Movement</p>
-      <span className='flex flex-row space-x-2'>
-      <p className='text-[18px] font-semibold  '>Camera Name</p> 
-     <p className=' text-[18px] text-red-600 font-semibold '> {cameraName}</p> 
-      </span>
-      
-      
-      <p ref={outputRef} id="output"></p>
-      {!isStarted && <button onClick={handleStartClick} 
-      className='bg-red-600 hover:bg-red-800 w-40 h-10 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mt-5'
-      >Start</button>}
-      {isStarted && (
-        <div>
-          <canvas ref={canvasRef}></canvas>
-          <div ref={labelContainerRef}></div>
+    <div className='w-1/2 h-full bg-yellow-50 flex flex-col items-center ml-20 mt-4 mb-10 border-2 rounded-lg'>
+    {isStarted && (
+        <div className="flex items-center">
+            {cameraName && (
+                <p className='text-[14px]' style={{color: 'green'}}>
+                    <p style={{color: 'black'}}>Detected Camera:</p> {cameraName}
+                </p>
+            )}
+            <img src={CCTVCamera} alt="Movement Icon" className="ml-2" style={{ width: '100px', height: '60px' }}/>
         </div>
-      )}
-      
-    </div>
+    )}
+    {isStarted && <p className='text-[18px] font-semibold'>Recognized Movement:</p>}
+    <p ref={outputRef} id="output"></p>
+    {!isStarted && (
+       <button
+       onClick={handleStartClick}
+       className='bg-red-600 hover:bg-red-800 flex items-center justify-center w-40 h-10 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mt-5'
+   >
+       <FaCamera className="mr-2" style={{marginRight: '20px'}} /> Start
+   </button>
+   
+    )}
+    {isStarted && (
+        <div>
+            <canvas ref={canvasRef}></canvas>
+            <div ref={labelContainerRef}></div>
+        </div>
+    )}
+</div>
   );
 };
 

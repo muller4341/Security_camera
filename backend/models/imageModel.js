@@ -15,8 +15,13 @@ const imageSchema = new mongoose.Schema({
   cameraName: { 
     type: String,
     required: true,
-  }
+  },
+  seen: {
+    type: Boolean,
+    default: false, // Default value is false for unseen
 },
+},
+
 {
   timestamps: true
 });

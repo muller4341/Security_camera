@@ -51,4 +51,37 @@ router.get('/allImages', async (req, res) => {
 }
 );
 
+// Endpoint to get the count of unseen images
+router.get('/images/count', async (req, res) => {
+  try {
+      const count = await ImageModel.countDocuments({ seen: false });
+      res.json({ count });
+  } catch (error) {
+      res.status(500).json({ error: 'Failed to get image count' });
+  }
+});
+
+// Endpoint to get images added after a specific timestamp
+router.get('/images/after/:timestamp', async (req, res) => {
+  try {
+      const timestamp = req.params.timestamp;
+      const images = await ImageModel.find({ createdAt: { $gt: timestamp }, seen: false });
+      res.json({ images });
+  } catch (error) {
+      console.error('Error fetching images:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Endpoint to mark notifications as seen
+router.put('/images/mark-as-seen', async (req, res) => {
+  try {
+      await ImageModel.updateMany({ seen: false }, { seen: true });
+      res.status(200).json({ message: 'Notifications marked as seen successfully' });
+  } catch (error) {
+      console.error('Error marking notifications as seen:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 export default router;
