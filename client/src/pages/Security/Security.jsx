@@ -198,9 +198,9 @@ const Security = () => {
         <div className="absolute top-2 left-2 flex flex-col space-y-2">
           <button 
             onClick={handleMaximize} 
-            className='bg-gray-600 hover:bg-blue-800 flex items-center justify-center w-21 h-10 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mt-5'
+            className='bg-gray-600 hover:bg-blue-800 flex items-center justify-center w-40 h-10 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline mt-5'
           >
-           <FaExpand style={{marginRight: '5px'}} />Maximize 
+           <FaExpand style={{marginRight: '5px'}}/>Maximize 
           </button>
 
           <button
@@ -215,7 +215,7 @@ const Security = () => {
       {isStarted && (
         <div className="flex items-center">
           {cameraName && (
-            <p className='text-[14px]' style={{color: 'green'}}>
+            <p className='text-[22px]' style={{color: 'green'}}>
               <p style={{color: 'black'}}>Detected Camera:</p> {cameraName}
             </p>
           )}

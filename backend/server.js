@@ -18,7 +18,15 @@ app.use(express.json());
 app.use(cors()); // Enable CORS for all routes
 app.use(bodyParser.json({ limit: '200mb' })); // Increase payload size limit
 app.use(bodyParser.urlencoded({ limit: '200mb', extended: true })); // Increase payload size limit
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Move this line to your main server file
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Move this line to your main server file
+
+// Serve uploaded images statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+
+
+// Serve uploaded videos statically
+// app.use('/uploads/videos', express.static(path.join(__dirname, './uploads/videos')));
 
 mongoose.connect('mongodb+srv://muller:1234@cluster0.ve461b6.mongodb.net/Security?retryWrites=true&w=majority&appName=Cluster0')
   .then(() => {
