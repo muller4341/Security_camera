@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import * as tf from '@tensorflow/tfjs';
 import * as tmPose from '@teachablemachine/pose';
 import axios from 'axios';
-import audio1 from '../../assets/audio1.mp3';
 import CCTVCamera from '../../assets/CCTVCamera.gif';
 import { FaCamera, FaExpand, FaCompress, FaCircle } from "react-icons/fa";
 import { FiMinimize } from "react-icons/fi";
@@ -16,10 +15,6 @@ const Security = () => {
   const [canvasSize, setCanvasSize] = useState(50); // Initial canvas size as percentage
   const [screenshot, setScreenshot] = useState(null);
   const [cameraName, setCameraName] = useState('');
-
-  const audio = new Audio();
-
-  const audioFiles = [audio1];
 
   const handleCameraNameChange = (event) => {
     setCameraName(event.target.value);
@@ -38,7 +33,7 @@ const Security = () => {
     let model, webcam, ctx, labelContainer, maxPredictions;
 
     const init = async () => {
-      const URL = "https://teachablemachine.withgoogle.com/models/UrIMXKhyV/";
+      const URL = "https://teachablemachine.withgoogle.com/models/MWbfH2Ycc/";
       const modelURL = URL + "model.json";
       const metadataURL = URL + "metadata.json";
 
@@ -60,30 +55,19 @@ const Security = () => {
           labelContainer.childNodes[i].innerHTML = classPrediction;
 
           if (
+            prediction[0].probability.toFixed(2) >= 0.98 ||
             prediction[1].probability.toFixed(2) >= 0.98 ||
             prediction[2].probability.toFixed(2) >= 0.98 ||
-            prediction[3].probability.toFixed(2) >= 0.98
+            prediction[3].probability.toFixed(2) >= 0.98 ||
+            prediction[4].probability.toFixed(2) >= 0.98 ||
+            prediction[5].probability.toFixed(2) >= 0.98 ||
+            prediction[6].probability.toFixed(2) >= 0.98 ||
+            prediction[7].probability.toFixed(2) >= 0.98
           ) {
             outputRef.current.innerHTML = "Suspicious activity =  " + prediction[i].className;
             sendToDatabase();
-
-            if (!audio.paused) {
-              audio.pause();
-              audio.currentTime = 0;
-            }
-            audio.src = audio1;
-            try {
-              audio.play()
-            }
-            catch (error) {
-              console.error("Error playing audio:", error)
-            };
           } else {
             outputRef.current.innerHTML = "Normal activity";
-            if (!audio.paused) {
-              audio.pause();
-              audio.currentTime = 0;
-            }
           }
         }
 
@@ -156,7 +140,7 @@ const Security = () => {
     formData.append("cameraName", cameraName);
 
     axios
-      .post("http://localhost:3000/camera/upload", formData, {
+      .post("http://localhost:3000/camera/upload/images", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -243,3 +227,4 @@ const Security = () => {
 };
 
 export default Security;
+

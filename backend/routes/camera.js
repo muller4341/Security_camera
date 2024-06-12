@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-router.post('/upload', upload.single('screenshot'), async (req, res) => {
+router.post('/upload/images', upload.single('screenshot'), async (req, res) => {
   console.log("cameraName", req.body.cameraName);
     let lastProduct = await ImageModel.findOne({}).sort('-id');
         let id;
